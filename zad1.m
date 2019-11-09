@@ -1,12 +1,17 @@
-%dane
-%sta³e
-C1 = 0.65;
-C2 = 0.85;
-alpha1 = 13;
-alpha2 = 16;
+% V1 = zeros(n, 1);
+% V2 = zeros(n, 1);
+% T = zeros(n, 1);
+% F2 = zeros(n, 1);
+% F3 = zeros(n, 1);
+const;
+tspan = 0:Tp:Tsym;
 
-%punkt pracy
-f1 = 78;
-fd = 15;
-top = 90;
-h2 = 33.7852;
+
+F1 = F1out(F1in, Top, n, Tp);
+[t, V] = model(tspan, y0, F1in, Fd, p, q);
+figure;
+hold on;
+plot(t, V(:,1));
+hold off;
+figure;
+plot(t, V(:,2));
