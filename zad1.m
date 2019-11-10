@@ -7,7 +7,7 @@ const;
 tspan = 0:Tp:Tsym;
 
 
-F1 = F1out(F1in, Top, n, Tp);
+F1 = F1out(F1in, Top, n, Tp); %tutaj powinno isc wyjscie F1out w miejsce F1in, ale to jeszcze TODO
 [t, V] = model(tspan, y0, F1in, Fd, p, q);
 figure;
 hold on;
