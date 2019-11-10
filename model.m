@@ -5,7 +5,7 @@ function [t, y] = model(tspan, y0, F1, Fd, p, q)
     
     function dydt = dstate(t, y)
         dydt = zeros(2,1);
-        dydt(1) = F1(t) + Fd(t) - p * nthroot(y(1), 4);
+        dydt(1) = F1 + Fd - p * nthroot(y(1), 4);
         dydt(2) = p * nthroot(y(1), 4) - q * nthroot(y(2), 6);
     end
 end
