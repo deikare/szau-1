@@ -16,8 +16,8 @@ q = al2/nthroot(C2, 6); %jak cos nthroot(C2, 3) to pierwiastek 3iego stopnia z C
 Ch1 = 1 / sqrt(C1); %a te to pomocnicze przy liczeniu wysokosci z objetosci
 Ch2 = 1 / nthroot(C2, 3);
 
-Top = 90;
-Tsym = 500;
+Top = 0;
+Tsym = 300;
 Tp = 2;
 
 V1ust = ((F1in+Fd0)/p)^4; %w stanie ustalonym
