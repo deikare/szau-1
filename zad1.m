@@ -16,66 +16,7 @@ h2 = H2(V(:, 2), Ch2);
 
 [t_lin, V_lin] = model_lin(tspan, y0, F1, Fd, a1, a2, a3, b1, b2, Tp, Tsym);
 
-% h1_tol = H1(V1(:, 1), Ch1);
-% h2_tol = H2(V1(:, 2), Ch2);
-
 h1_lin = H1(V_lin(:, 1), Ch1);
 h2_lin = H2(V_lin(:, 2), Ch2);
 
-tiledlayout(2,2);
-
-nexttile;
-stairs(t, h1);
-hold on;
-stairs(t_lin, h1_lin);
-title('h1');
-ylabel('h1(t)');
-xlabel('t');
-legend('nieliniowy', 'zlinearyzowany');
-hold off;
-
-nexttile;
-stairs(t, h2);
-hold on;
-stairs(t_lin, h2_lin);
-title('h2');
-ylabel('h2(t)');
-xlabel('t');
-legend('nieliniowy', 'zlinearyzowany');
-hold off;
-
-nexttile;
-stairs(t, V(:, 1));
-hold on;
-stairs(t_lin, V_lin(:, 1));
-title('V1');
-ylabel('V1(t)');
-xlabel('t');
-legend('nieliniowy', 'zlinearyzowany');
-hold off;
-
-nexttile;
-stairs(t, V(:, 2));
-hold on;
-stairs(t_lin, V_lin(:, 2));
-title('V2');
-ylabel('V2(t)');
-xlabel('t');
-legend('nieliniowy', 'zlinearyzowany');
-hold off;
-
-% figure;
-% stairs(t, h1);
-% % stairs(t, V(:, 1));
-% hold on;
-% % stairs(t_lin, V_lin(:, 1));
-% stairs(t_lin, h1_lin);
-% hold off;
-% 
-% figure;
-% stairs(t, h2);
-% % stairs(t, V(:, 2));
-% hold on;
-% % stairs(t_lin, V_lin(:, 2));
-% stairs(t_lin, h2_lin);
-% hold off;
+modelPlotter(V, V_lin, h1, h1_lin, h2, h2_lin, t, t_lin);

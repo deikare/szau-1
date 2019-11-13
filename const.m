@@ -6,7 +6,7 @@ al2 = 16;
 
 F1in = 78;
 Fd0 = 15;
-h1_0 = 40;
+h1_0 = 0;
 h2_0 = 33.7852;
 % h2_0 = 0;
 V1_0 = V1(h1_0, C1); %warunki pocz¹tkowe objetosci
@@ -18,8 +18,8 @@ Ch1 = 1 / sqrt(C1); %a te to pomocnicze przy liczeniu wysokosci z objetosci
 Ch2 = 1 / nthroot(C2, 3);
 
 Top = 90;
-Tsym = 200;
-Tp = 0.1;
+Tsym = 2000;
+Tp = 2;
 
 V1ust = ((F1in+Fd0)/p)^4; %w stanie ustalonym
 V2ust = ((F1in+Fd0)/q)^6;
@@ -35,8 +35,9 @@ disp(['h1ust = ', num2str(h1ust)]);
 disp(['h2ust = ', num2str(h2ust)]);
 
 %pkty linearyzacji
-h1_lin = 40;
+h1_lin = 35;
 h2_lin = 33.7852;
+% h2_lin = 32;
 
 V1_lin = V1(h1_lin, C1);
 V2_lin = V2(h2_lin, C2);
