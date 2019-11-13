@@ -23,10 +23,17 @@ h1_lin = H1(V_lin(:, 1), Ch1);
 h2_lin = H2(V_lin(:, 2), Ch2);
 
 figure;
-hold on;
 stairs(t, h1);
+% stairs(t, V(:, 1));
+hold on;
+% stairs(t_lin, V_lin(:, 1));
 stairs(t_lin, h1_lin);
 hold off;
+
 figure;
 stairs(t, h2);
+% stairs(t, V(:, 2));
+hold on;
+% stairs(t_lin, V_lin(:, 2));
 stairs(t_lin, h2_lin);
+hold off;

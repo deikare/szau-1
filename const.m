@@ -6,8 +6,9 @@ al2 = 16;
 
 F1in = 78;
 Fd0 = 15;
-h1_0 = 0;
+h1_0 = 40;
 h2_0 = 33.7852;
+% h2_0 = 0;
 V1_0 = V1(h1_0, C1); %warunki pocz¹tkowe objetosci
 V2_0 = V2(h2_0, C2); %warunki pocztkowe objetosci
 
@@ -17,8 +18,8 @@ Ch1 = 1 / sqrt(C1); %a te to pomocnicze przy liczeniu wysokosci z objetosci
 Ch2 = 1 / nthroot(C2, 3);
 
 Top = 90;
-Tsym = 300;
-Tp = 2;
+Tsym = 200;
+Tp = 0.1;
 
 V1ust = ((F1in+Fd0)/p)^4; %w stanie ustalonym
 V2ust = ((F1in+Fd0)/q)^6;
@@ -34,7 +35,7 @@ disp(['h1ust = ', num2str(h1ust)]);
 disp(['h2ust = ', num2str(h2ust)]);
 
 %pkty linearyzacji
-h1_lin = 20;
+h1_lin = 40;
 h2_lin = 33.7852;
 
 V1_lin = V1(h1_lin, C1);
@@ -47,4 +48,12 @@ a3 = -a1;
 b1 = -3*p * (nthroot(V1_lin, 4)) / 4;
 b2 = -b1 - 5 * q * (nthroot(V2_lin, 6)) / 6;
 
+%w stanie ustalonym w linearyzacji
+V1ust_lin = (-F1in-Fd0-b1)/a1;
+V2ust_lin = (-a3 * V1ust_lin - b2) / a2;
 
+h1ust_lin = Ch1 * sqrt(V1ust_lin);
+h2ust_lin = Ch2 * nthroot(V2ust, 3);
+
+disp(['h1ust_lin = ', num2str(h1ust_lin)]);
+disp(['h2ust_lin = ', num2str(h2ust_lin)]);

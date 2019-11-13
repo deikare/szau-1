@@ -1,7 +1,8 @@
 function [t, y] = model_lin(tspan, y0, F1, Fd, a1, a2, a3, b1, b2, Tp, Tsym)
 %funkcja liczaca model
-    [t, y] = ode45(@dstate, tspan, y0);
-    
+    [t, y] = ode45(@dstate, tspan, y0, odeset('NonNegative', 1:2));
+%     [t, y] = ode45(@dstate, tspan, y0);
+
     function dydt = dstate(t, y)
         dydt = zeros(2,1);
         F1_act = interp1(0:Tp:Tsym, F1, t); %interpolacja dyskretnych danych dla chwili t

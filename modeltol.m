@@ -1,6 +1,6 @@
 function [t, y] = modeltol(tspan, y0, F1, Fd, p, q, Tp, Tsym)
 %funkcja liczaca model
-    [t, y] = ode45(@dstate, tspan, y0, odeset('RelTol',1e-12,'AbsTol',1e-12));
+    [t, y] = ode45(@dstate, tspan, y0);
     
     function dydt = dstate(t, y)
         dydt = zeros(2,1);
