@@ -1,6 +1,6 @@
-function [t, y] = modeltol(tspan, y0, F1, Fd, p, q, Tp, Tsym)
+function [t, y] = model_lin(tspan, y0, F1, Fd, a1, a2, a3, b1, b2, Tp, Tsym)
 %funkcja liczaca model
-    [t, y] = ode45(@dstate, tspan, y0, odeset('RelTol',1e-12,'AbsTol',1e-12));
+    [t, y] = ode45(@dstate, tspan, y0);
     
     function dydt = dstate(t, y)
         dydt = zeros(2,1);
@@ -15,8 +15,7 @@ function [t, y] = modeltol(tspan, y0, F1, Fd, p, q, Tp, Tsym)
             y(2) = 0;
         end
         
-        dydt(1) = F1_act + Fd_act - p * nthroot(y(1), 4); %juz zostalo dodane opoznienie
-        dydt(2) = p * nthroot(y(1), 4) - q * nthroot(y(2), 6);
+        dydt(1) = F1_act + Fd_act + a1 * y(1) + b1; %juz zostalo dodane opoznienie
+        dydt(2) = a3 * y(1) + a2 * y(2) + b2;
     end
 end
-

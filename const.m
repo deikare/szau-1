@@ -16,7 +16,7 @@ q = al2/nthroot(C2, 6); %jak cos nthroot(C2, 3) to pierwiastek 3iego stopnia z C
 Ch1 = 1 / sqrt(C1); %a te to pomocnicze przy liczeniu wysokosci z objetosci
 Ch2 = 1 / nthroot(C2, 3);
 
-Top = 0;
+Top = 90;
 Tsym = 300;
 Tp = 2;
 
@@ -32,4 +32,19 @@ y0 = [V1_0, V2_0];
 
 disp(['h1ust = ', num2str(h1ust)]);
 disp(['h2ust = ', num2str(h2ust)]);
+
+%pkty linearyzacji
+h1_lin = 20;
+h2_lin = 33.7852;
+
+V1_lin = V1(h1_lin, C1);
+V2_lin = V2(h2_lin, C2);
+
+%wspolczynniki do modelu liniowego
+a1 = -p * ((nthroot(V1_lin, 4)).^(-3)) / 4;
+a2 = -q * ((nthroot(V2_lin, 6)).^(-5)) / 6;
+a3 = -a1;
+b1 = -3*p * (nthroot(V1_lin, 4)) / 4;
+b2 = -b1 - 5 * q * (nthroot(V2_lin, 6)) / 6;
+
 
