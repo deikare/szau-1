@@ -1,5 +1,5 @@
-function modelPlotter(V, V_lin, h1, h1_lin, h2, h2_lin, t, t_lin)
-    tiledlayout(2,2);
+function modelPlotter(V, V_lin, h1, h1_lin, h2, h2_lin, t, t_lin, F1, Fd)
+    tiledlayout(3, 2);
 
     nexttile;
     stairs(t, h1);
@@ -8,7 +8,7 @@ function modelPlotter(V, V_lin, h1, h1_lin, h2, h2_lin, t, t_lin)
     title('h1');
     ylabel('h1(t)');
     xlabel('t');
-    legend('nieliniowy', 'zlinearyzowany');
+    legend({'nieliniowy', 'zlinearyzowany'}, 'Location', 'Southeast');
     hold off;
 
     nexttile;
@@ -18,7 +18,7 @@ function modelPlotter(V, V_lin, h1, h1_lin, h2, h2_lin, t, t_lin)
     title('h2');
     ylabel('h2(t)');
     xlabel('t');
-    legend('nieliniowy', 'zlinearyzowany');
+    legend({'nieliniowy', 'zlinearyzowany'}, 'Location', 'Southeast');
     hold off;
 
     nexttile;
@@ -28,7 +28,7 @@ function modelPlotter(V, V_lin, h1, h1_lin, h2, h2_lin, t, t_lin)
     title('V1');
     ylabel('V1(t)');
     xlabel('t');
-    legend('nieliniowy', 'zlinearyzowany');
+    legend({'nieliniowy', 'zlinearyzowany'}, 'Location', 'Southeast');
     hold off;
 
     nexttile;
@@ -38,7 +38,17 @@ function modelPlotter(V, V_lin, h1, h1_lin, h2, h2_lin, t, t_lin)
     title('V2');
     ylabel('V2(t)');
     xlabel('t');
-    legend('nieliniowy', 'zlinearyzowany');
+    legend({'nieliniowy', 'zlinearyzowany'}, 'Location', 'Southeast');
+    hold off;
+    
+    nexttile;
+    stairs(t, F1);
+    hold on;
+    stairs(t, Fd);
+    title('F1 i Fd');
+    ylabel('dop³yw');
+    xlabel('t');
+    legend({'F1', 'Fd'}, 'Location', 'Southeast');
     hold off;
 end
 

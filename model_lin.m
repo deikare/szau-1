@@ -1,6 +1,6 @@
 function [t, y] = model_lin(tspan, y0, F1, Fd, a1, a2, a3, b1, b2, Tp, Tsym)
 %funkcja liczaca model
-    [t, y] = ode45(@dstate, tspan, y0, odeset('NonNegative', 1:2));
+    [t, y] = ode45(@dstate, tspan, y0, odeset('RelTol',1e-12,'AbsTol',1e-12, 'NonNegative', 1:2));
 %     [t, y] = ode45(@dstate, tspan, y0);
 
     function dydt = dstate(t, y)
