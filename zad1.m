@@ -1,10 +1,10 @@
 const;
 tspan = 0:Tp:Tsym;
 
-FdK_w = [Fd0-20 Fd0-10 Fd0 Fd0+10 Fd0+20]; %wektory kolejnych wartosci aktualnych punktow pracy modelu
+FdK_w = [Fd0-20 Fd0-10 Fd0 Fd0+10 Fd0+20]; %wektory kolejnych skokow -odpowiednio do testu odpowiedzi na skok Fd oraz F1in
 F1inK_w = [F1in-20 F1in-10 F1in F1in+10 F1in+20];
-% F1inK_w = 76;
-% tau_w = 0.5 * Top: 0.25*Top : 1.5*Top;
+% F1inK_w = 76;   %tu w pelni przygotowane wektory do testow takze po opoznieniu i wysokosci poczatkowej                          
+% tau_w = 0.5 * Top: 0.25*Top : 1.5*Top; 
 % h1_0_w = 0 : 0.35 * h1_0 : 1.5 * h1_0;
 % h2_0_w = 0.5 * h2_0 : 0.25 * h2_0 : 1.5 * h2_0;
 % tau_w = Top;
@@ -17,37 +17,8 @@ length_F1inK_w = length(F1inK_w);
 % length_h2_0_w = length(h2_0_w);
 
 
-% %%%wersja dla jednego testu modelu
-% Fd = Fdout(15, n);
-% F1 = F1out(F1in, 76, Top, n, Tp); 
-% [t, V] = model(tspan, y0, F1, Fd, p, q, Tp, Tsym); %tutaj powinno isc wyjscie F1out w miejsce F1in, ale to jeszcze TODO
-% % [t1, V1] = modeltol(tspan, y0, F1, Fd, p, q, Tp, Tsym);
-% h1 = H1(V(:, 1), Ch1);
-% h2 = H2(V(:, 2), Ch2);
-% 
-% [t_lin, V_lin] = model_lin(tspan, y0, F1, Fd, a1, a2, a3, b1, b2, Tp, Tsym);
-% 
-% h1_lin = H1(V_lin(:, 1), Ch1);
-% h2_lin = H2(V_lin(:, 2), Ch2);
-% 
-% F2 = al1 * sqrt(h1);
-% F3 = al2 * sqrt(h2);
-% 
-% figure;
-% plot(t, h1);
-% figure;
-% plot(t,h2);
-% figure;
-% plot(t, F2);
-% figure;
-% plot(t, F3);
-% % figure;
-% % hold on;
-% % modelPlotter(V, V_lin, h1, h1_lin, h2, h2_lin, t, t_lin);
-% % hold off;
-
 j = 1;
-FdK_akt = 0;
+FdK_akt = 0; %inicjalizacja wartosci aktualnych w kazdej symulacji
 F1inK_akt = 0;
 tau_akt = 0;
 h1_0_akt = 0;
@@ -75,7 +46,8 @@ for i = 1 : length_FdK_w + length_F1inK_w %+ length_tau_w + length_h1_0_w + leng
         tau_akt = Top;
         h1_0_akt = h1_0;
         h2_0_akt = h2_0;
-        
+        %%tu odkomentowaæ, je¿eli chcemy po zmienionym tau, h1_0 lub h2_0,
+        %%analogicznie mozna dodaæ swoje testy
 %     elseif (i - length_FdK_w - length_F1inK_w <= length_tau_w) %testujemy po zmienionym tau
 %         if j > length_tau_w
 %            j = 1; 
@@ -124,11 +96,12 @@ for i = 1 : length_FdK_w + length_F1inK_w %+ length_tau_w + length_h1_0_w + leng
     F2w = F2out(al1, h1);
     
     F3w = F3out(al2, h2);
-%     plot(t, F2w);
     
     [t_lin, V_lin] = model_lin(tspan, y0, F1, Fd, a1, a2, a3, b1, b2, Tp, Tsym); %wyliczenie modelu zlinearyzowanego
-    h1_lin = H1(V_lin(:, 1), Ch1);
-    h2_lin = H2(V_lin(:, 2), Ch2);
+%     h1_lin = H1(V_lin(:, 1), Ch1); %%tutaj jest liczone nieliniowo
+%     h2_lin = H2(V_lin(:, 2), Ch2);
+    h1_lin = H1zlin(V_lin(:, 1), Ch1, V1_lin); %dopiero teraz jest w pelni liniowo
+    h2_lin = H2zlin(V_lin(:, 2), Ch2, V2_lin);
     
 %     fh = figure('NumberTitle', 'off', 'Name', ['F1in=', num2str(F1in_akt), ', Fd=', num2str(Fd0_akt), ', tau=', num2str(tau_akt), ', h1z=', num2str(h1_0_akt), ', h2z=', num2str(h2_0_akt)]); 
     fh = figure('Name', ['F1inK=', num2str(F1inK_akt), ', FdK=', num2str(FdK_akt), ', tau=', num2str(tau_akt), ', h1z=', num2str(h1_0_akt), ', h2z=', num2str(h2_0_akt)]); 
@@ -140,7 +113,7 @@ for i = 1 : length_FdK_w + length_F1inK_w %+ length_tau_w + length_h1_0_w + leng
 end
 
 
-h1_w = zeros(n+1, length_FdK_w); %wektory do przechowywania kolejnych wynikow linearyzacji
+h1_w = zeros(n+1, length_FdK_w); %wektory do przechowywania kolejnych wynikow linearyzacji zbiorczej - po roznych skokach
 h2_w = zeros(n+1, length_FdK_w);
 V1_w = zeros(n+1, length_FdK_w);
 V2_w = zeros(n+1, length_FdK_w);
@@ -154,8 +127,10 @@ for FdK_akt = FdK_w %zestawienie wynikow linearyzacji dla zmian skokow Fd
     y0 = [V1(h1_0, C1), V2(h2_0, C2)];
     
     [t_lin, V_lin] = model_lin(tspan, y0, F1, Fd, a1, a2, a3, b1, b2, Tp, Tsym); %wyliczenie modelu zlinearyzowanego
-    h1_lin = H1(V_lin(:, 1), Ch1);
-    h2_lin = H2(V_lin(:, 2), Ch2);
+%     h1_lin = H1(V_lin(:, 1), Ch1);
+%     h2_lin = H2(V_lin(:, 2), Ch2);
+    h1_lin = H1zlin(V_lin(:, 1), Ch1, V1_lin); %dopiero teraz jest w pelni liniowo
+    h2_lin = H2zlin(V_lin(:, 2), Ch2, V2_lin);
     
     F2w_lin = F2out(al1, h1_lin);
     
@@ -184,8 +159,10 @@ for F1inK_akt = F1inK_w %zestawienie wynikow linearyzacji dla zmian skokow F1
     y0 = [V1(h1_0, C1), V2(h2_0, C2)];
     
     [t_lin, V_lin] = model_lin(tspan, y0, F1, Fd, a1, a2, a3, b1, b2, Tp, Tsym); %wyliczenie modelu zlinearyzowanego
-    h1_lin = H1(V_lin(:, 1), Ch1);
-    h2_lin = H2(V_lin(:, 2), Ch2);
+%     h1_lin = H1(V_lin(:, 1), Ch1);
+%     h2_lin = H2(V_lin(:, 2), Ch2);
+    h1_lin = H1zlin(V_lin(:, 1), Ch1, V1_lin); %dopiero teraz jest w pelni liniowo
+    h2_lin = H2zlin(V_lin(:, 2), Ch2, V2_lin);
     
     F2w_lin = F2out(al1, h1_lin);
     
