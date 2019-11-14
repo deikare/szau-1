@@ -6,14 +6,16 @@
 const;
 tspan = 0:Tp:Tsym;
 
-Fd0_w = 0.5 * Fd0: 0.25*Fd0 : 1.5*Fd0; %wektory kolejnych wartosci aktualnych punktow pracy modelu
-F1in_w = 0.5 * F1in: 0.25*F1in : 1.5*F1in;
-tau_w = 0.5 * Top: 0.25*Top : 1.5*Top;
-h1_0_w = 0 : 0.35 * h1_0 : 1.5 * h1_0;
-h2_0_w = 0.5 * h2_0 : 0.25 * h2_0 : 1.5 * h2_0;
-
-length_Fd0_w = length(Fd0_w); %licze dlugosci wektorow, bo ptorzebne sa do automatyzacji testow modeli
-length_F1in_w = length(F1in_w);
+FdK_w = [0.5*Fd0 0.75*Fd0 1.5*Fd0]; %wektory kolejnych wartosci aktualnych punktow pracy modelu
+F1inK_w = [0.5*F1in 0.75*F1in 1.5*F1in];
+% tau_w = 0.5 * Top: 0.25*Top : 1.5*Top;
+% h1_0_w = 0 : 0.35 * h1_0 : 1.5 * h1_0;
+% h2_0_w = 0.5 * h2_0 : 0.25 * h2_0 : 1.5 * h2_0;
+tau_w = Top;
+h1_0_w = h1_0;
+h2_0_w = h2_0;
+length_FdK_w = length(FdK_w); %licze dlugosci wektorow, bo ptorzebne sa do automatyzacji testow modeli
+length_F1inK_w = length(F1inK_w);
 length_tau_w = length(tau_w);
 length_h1_0_w = length(h1_0_w);
 length_h2_0_w = length(h2_0_w);
@@ -38,65 +40,65 @@ length_h2_0_w = length(h2_0_w);
 % hold off;
 
 j = 1;
-Fd0_akt = 0;
-F1in_akt = 0;
+FdK_akt = 0;
+F1inK_akt = 0;
 tau_akt = 0;
 h1_0_akt = 0;
 h2_0_akt = 0;
 
-for i = 1 : length_Fd0_w + length_F1in_w + length_tau_w + length_h1_0_w + length_h2_0_w
-    if (i <= length_Fd0_w) %testujemy po zmienionym Fd0
-        if j > length_Fd0_w
+for i = 1 : length_FdK_w + length_F1inK_w + length_tau_w + length_h1_0_w + length_h2_0_w
+    if (i <= length_FdK_w) %testujemy po zmienionym FdK
+        if j > length_FdK_w
            j = 1; 
         end
         
-        Fd0_akt = Fd0_w(j);
-        F1in_akt = F1in;
+        FdK_akt = FdK_w(j);
+        F1inK_akt = F1in;
         tau_akt = Top;
         h1_0_akt = h1_0;
         h2_0_akt = h2_0;
         
-    elseif (i - length_Fd0_w <= length_F1in_w) %testujemy po zmienionym F1in
-        if j > length_F1in_w
+    elseif (i - length_FdK_w <= length_F1inK_w) %testujemy po zmienionym F1inK
+        if j > length_F1inK_w
            j = 1; 
         end
         
-        Fd0_akt = Fd0;
-        F1in_akt = F1in_w(j);
+        FdK_akt = Fd0;
+        F1inK_akt = F1inK_w(j);
         tau_akt = Top;
         h1_0_akt = h1_0;
         h2_0_akt = h2_0;
         
-    elseif (i - length_Fd0_w - length_F1in_w <= length_tau_w) %testujemy po zmienionym tau
+    elseif (i - length_FdK_w - length_F1inK_w <= length_tau_w) %testujemy po zmienionym tau
         if j > length_tau_w
            j = 1; 
         end
         
-        Fd0_akt = Fd0;
-        F1in_akt = F1in;
+        FdK_akt = Fd0;
+        F1inK_akt = F1in;
         tau_akt = tau_w(j);
         h1_0_akt = h1_0;
         h2_0_akt = h2_0;
         
         
-    elseif i - length_Fd0_w - length_F1in_w - length_tau_w <= length_h1_0_w %testujemy po zmienionym h1_0
+    elseif i - length_FdK_w - length_F1inK_w - length_tau_w <= length_h1_0_w %testujemy po zmienionym h1_0
         if j > length_h1_0_w
            j = 1; 
         end
         
-        Fd0_akt = Fd0;
-        F1in_akt = F1in;
+        FdK_akt = Fd0;
+        F1inK_akt = F1in;
         tau_akt = Top;
         h1_0_akt = h1_0_w(j);
         h2_0_akt = h2_0;
         
-    elseif (i - length_Fd0_w - length_F1in_w - length_tau_w - length_h1_0_w <= length_h2_0_w) %testujemy po zmienionym h2_0
+    elseif (i - length_FdK_w - length_F1inK_w - length_tau_w - length_h1_0_w <= length_h2_0_w) %testujemy po zmienionym h2_0
         if j > length_h2_0_w
            j = 1; 
         end
         
-        Fd0_akt = Fd0;
-        F1in_akt = F1in;
+        FdK_akt = Fd0;
+        F1inK_akt = F1in;
         tau_akt = Top;
         h1_0_akt = h1_0;
         h2_0_akt = h2_0_w(j);
@@ -104,8 +106,8 @@ for i = 1 : length_Fd0_w + length_F1in_w + length_tau_w + length_h1_0_w + length
     
     j = j + 1;
     
-    Fd = zeros(n+1, 1) + Fd0_akt; %przygotowanie wektorow probek zaklocen, F1 opoznione i V0
-    F1 = F1out(F1in_akt, tau_akt, n, Tp);
+    Fd = Fdout(FdK_akt, n); %przygotowanie wektorow probek zaklocen, F1 opoznione i V0
+    F1 = F1out(F1in, F1inK_akt, tau_akt, n, Tp);
     y0 = [V1(h1_0_akt, C1), V2(h2_0_akt, C2)];
     
     [t, V] = model(tspan, y0, F1, Fd, p, q, Tp, Tsym); %wyliczenie modelu nieliniowego
@@ -117,7 +119,7 @@ for i = 1 : length_Fd0_w + length_F1in_w + length_tau_w + length_h1_0_w + length
     h2_lin = H2(V_lin(:, 2), Ch2);
     
 %     fh = figure('NumberTitle', 'off', 'Name', ['F1in=', num2str(F1in_akt), ', Fd=', num2str(Fd0_akt), ', tau=', num2str(tau_akt), ', h1z=', num2str(h1_0_akt), ', h2z=', num2str(h2_0_akt)]); 
-    fh = figure('Name', ['F1in=', num2str(F1in_akt), ', Fd=', num2str(Fd0_akt), ', tau=', num2str(tau_akt), ', h1z=', num2str(h1_0_akt), ', h2z=', num2str(h2_0_akt)]); 
+    fh = figure('Name', ['F1inK=', num2str(F1inK_akt), ', FdK=', num2str(FdK_akt), ', tau=', num2str(tau_akt), ', h1z=', num2str(h1_0_akt), ', h2z=', num2str(h2_0_akt)]); 
     fh.WindowState = 'maximized';
     hold on;
     modelPlotter(V, V_lin, h1, h1_lin, h2, h2_lin, t, t_lin, F1, Fd);

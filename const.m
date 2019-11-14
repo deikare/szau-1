@@ -18,7 +18,7 @@ Ch1 = 1 / sqrt(C1); %a te to pomocnicze przy liczeniu wysokosci z objetosci
 Ch2 = 1 / nthroot(C2, 3);
 
 Top = 90;
-Tsym = 200;
+Tsym = 1000;
 Tp = 2;
 
 V1ust = ((F1in+Fd0)/p)^4; %w stanie ustalonym
