@@ -8,6 +8,7 @@ tspan = 0:Tp:Tsym;
 
 FdK_w = [0.5*Fd0 0.75*Fd0 1.5*Fd0]; %wektory kolejnych wartosci aktualnych punktow pracy modelu
 F1inK_w = [0.5*F1in 0.75*F1in 1.5*F1in];
+% F1inK_w = 76;
 % tau_w = 0.5 * Top: 0.25*Top : 1.5*Top;
 % h1_0_w = 0 : 0.35 * h1_0 : 1.5 * h1_0;
 % h2_0_w = 0.5 * h2_0 : 0.25 * h2_0 : 1.5 * h2_0;
@@ -21,9 +22,9 @@ length_h1_0_w = length(h1_0_w);
 length_h2_0_w = length(h2_0_w);
 
 
-%%%%wersja dla jednego testu modelu
-% Fd = zeros(n+1, 1) + Fd0;
-% F1 = F1out(F1in, Top, n, Tp); 
+% %%%wersja dla jednego testu modelu
+% Fd = Fdout(15, n);
+% F1 = F1out(F1in, 76, Top, n, Tp); 
 % [t, V] = model(tspan, y0, F1, Fd, p, q, Tp, Tsym); %tutaj powinno isc wyjscie F1out w miejsce F1in, ale to jeszcze TODO
 % % [t1, V1] = modeltol(tspan, y0, F1, Fd, p, q, Tp, Tsym);
 % h1 = H1(V(:, 1), Ch1);
@@ -34,10 +35,21 @@ length_h2_0_w = length(h2_0_w);
 % h1_lin = H1(V_lin(:, 1), Ch1);
 % h2_lin = H2(V_lin(:, 2), Ch2);
 % 
+% F2 = al1 * sqrt(h1);
+% F3 = al2 * sqrt(h2);
+% 
 % figure;
-% hold on;
-% modelPlotter(V, V_lin, h1, h1_lin, h2, h2_lin, t, t_lin);
-% hold off;
+% plot(t, h1);
+% figure;
+% plot(t,h2);
+% figure;
+% plot(t, F2);
+% figure;
+% plot(t, F3);
+% % figure;
+% % hold on;
+% % modelPlotter(V, V_lin, h1, h1_lin, h2, h2_lin, t, t_lin);
+% % hold off;
 
 j = 1;
 FdK_akt = 0;
@@ -114,6 +126,21 @@ for i = 1 : length_FdK_w + length_F1inK_w + length_tau_w + length_h1_0_w + lengt
     h1 = H1(V(:, 1), Ch1);
     h2 = H2(V(:, 2), Ch2);
     
+    F2w = zeros(n+1, 1);
+    k = 1;
+    while k <= n + 1
+        F2w(k, 1) = al1 * sqrt(h1(k, 1));
+        k = k+1;
+    end
+    
+    F3w = zeros(n+1, 1);
+    k = 1;
+    while k <= n + 1
+        F3w(k, 1) = al2 * sqrt(h2(k, 1));
+        k = k+1;
+    end
+%     plot(t, F2w);
+    
     [t_lin, V_lin] = model_lin(tspan, y0, F1, Fd, a1, a2, a3, b1, b2, Tp, Tsym); %wyliczenie modelu zlinearyzowanego
     h1_lin = H1(V_lin(:, 1), Ch1);
     h2_lin = H2(V_lin(:, 2), Ch2);
@@ -122,7 +149,7 @@ for i = 1 : length_FdK_w + length_F1inK_w + length_tau_w + length_h1_0_w + lengt
     fh = figure('Name', ['F1inK=', num2str(F1inK_akt), ', FdK=', num2str(FdK_akt), ', tau=', num2str(tau_akt), ', h1z=', num2str(h1_0_akt), ', h2z=', num2str(h2_0_akt)]); 
     fh.WindowState = 'maximized';
     hold on;
-    modelPlotter(V, V_lin, h1, h1_lin, h2, h2_lin, t, t_lin, F1, Fd);
+    modelPlotter(V, V_lin, h1, h1_lin, h2, h2_lin, t, t_lin, F1, Fd, F2w, F3w);
     hold off;
     
 end

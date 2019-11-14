@@ -1,4 +1,4 @@
-function modelPlotter(V, V_lin, h1, h1_lin, h2, h2_lin, t, t_lin, F1, Fd)
+function modelPlotter(V, V_lin, h1, h1_lin, h2, h2_lin, t, t_lin, F1, Fd, F2, F3)
     tiledlayout(3, 2, 'TileSpacing','compact', 'Padding', 'compact');
 
     nexttile;
@@ -41,32 +41,42 @@ function modelPlotter(V, V_lin, h1, h1_lin, h2, h2_lin, t, t_lin, F1, Fd)
     legend({'nieliniowy', 'zlinearyzowany'}, 'Location', 'Southeast');
     hold off;
     
-%     nexttile;
-%     stairs(t, F1);
-%     hold on;
-%     stairs(t, Fd);
-%     title('F1 i Fd');
-%     ylabel('dop造w');
-%     xlabel('t');
-%     legend({'F1', 'Fd'}, 'Location', 'Southeast');
-%     hold off;
-
     nexttile;
     stairs(t, F1);
     hold on;
-%     stairs(t, Fd);
-    title('F1');
-    ylabel('dop造w');
-    xlabel('t');
-    hold off;
-    
-    nexttile;
-%     stairs(t, F1);
     stairs(t, Fd);
-    hold on;
-    title('Fd');
+    title('F1 i Fd');
     ylabel('dop造w');
     xlabel('t');
+    legend({'F1', 'Fd'}, 'Location', 'Southeast');
     hold off;
+
+    nexttile;
+    stairs(t, F2);
+    hold on;
+    stairs(t, F3);
+    title('F2 i F3');
+    ylabel('wyp造w');
+    xlabel('t');
+    legend({'F2', 'F3'}, 'Location', 'Southeast');
+    hold off;
+
+%     nexttile;
+%     stairs(t, F1);
+%     hold on;
+% %     stairs(t, Fd);
+%     title('F1');
+%     ylabel('dop造w');
+%     xlabel('t');
+%     hold off;
+%     
+%     nexttile;
+% %     stairs(t, F1);
+%     stairs(t, Fd);
+%     hold on;
+%     title('Fd');
+%     ylabel('dop造w');
+%     xlabel('t');
+%     hold off;
 end
 

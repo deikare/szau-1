@@ -1,5 +1,7 @@
 function [t, y] = model(tspan, y0, F1, Fd, p, q, Tp, Tsym)
 %funkcja liczaca model
+%     disp(p);
+%     disp(q);
     [t, y] = ode45(@dstate, tspan, y0, odeset('RelTol',1e-8,'AbsTol',1e-9));
     
     function dydt = dstate(t, y)
@@ -16,7 +18,7 @@ function [t, y] = model(tspan, y0, F1, Fd, p, q, Tp, Tsym)
         end
         
         dydt(1) = F1_act + Fd_act - p * nthroot(y(1), 4); %juz zostalo dodane opoznienie
-        dydt(2) = p * nthroot(y(1), 4) - q * nthroot(y(2), 6);
+        dydt(2) = p * nthroot(y(1), 4) - q * nthroot(y(2), 4);
     end
 end
 
