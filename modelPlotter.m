@@ -1,6 +1,8 @@
-function modelPlotter(V, V_lin, h1, h1_lin, h2, h2_lin, t, t_lin, F1, Fd, F2, F3)
-    tiledlayout(3, 2, 'TileSpacing','compact', 'Padding', 'compact');
-
+function modelPlotter(V, V_lin, h1, h1_lin, h2, h2_lin, t, t_lin, F1, Fd, F2, F3, figureTitle)
+%     tiledlayout(3, 2, 'TileSpacing','compact', 'Padding', 'compact');
+    lay = tiledlayout(3, 2, 'TileSpacing','compact', 'Padding', 'compact');
+    title(lay, figureTitle);
+    
     nexttile;
     stairs(t, h1);
     hold on;
@@ -55,7 +57,7 @@ function modelPlotter(V, V_lin, h1, h1_lin, h2, h2_lin, t, t_lin, F1, Fd, F2, F3
     stairs(t, F2);
     hold on;
     stairs(t, F3);
-    title('F2 i F3');
+    title('F2 i F3(z nieliniowego)');
     ylabel('wyp³yw');
     xlabel('t');
     legend({'F2', 'F3'}, 'Location', 'Southeast');
