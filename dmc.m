@@ -12,29 +12,29 @@ stairs(t, V_lin(:, 2));
 hold off;
 
 h1_lin = (H1zlin(V_lin(:, 1), Ch1, V1_lin) - h1_0) / 20 + h1_0; %podzielic przez wielkosc skoku
-h2_lin = (H2zlin(V_lin(:, 2), Ch2, V2_lin)  - h2_0) / 20 + h2_0;
+%h2_lin = (H2zlin(V_lin(:, 2), Ch2, V2_lin)  - h2_0) / 20 + h2_0;
+h2_lin = (H2zlin(V_lin(:, 2), Ch2, V2_lin)  - h2_0) / 20;
+figure;
+% stairs(t, h1_lin);
+% hold on;
+stairs(t, h2_lin);
+hold off;
 
-% figure;
-% % stairs(t, h1_lin);
-% % hold on;
-% stairs(t, h2_lin);
-% % hold off;
 
-
-D = round(440/Tp);
+D = round(345/Tp);
 % D = 5;
 s = h2_lin(1:D);
-Nu = 5;
-N = 5;
-fi = 5;
-lam = 0.3;
-yzad = 25;
+Nu = 10;
+N = D;
+fi = 1;
+lam = 0.01;
+yzad = 20;
 Fi = diag(zeros(1, N) + fi);
 Lambda = diag(zeros(1, Nu) + lam);
 
-deltaUmax = 30;
-umax = 120;
-umin = 30;
+deltaUmax = 10;
+umax = 100;
+umin = 0;
 
 disp(Fi);
 disp(Lambda);
@@ -79,17 +79,28 @@ for i = 1 : N
     ke = ke + K(1, i);
 end
 ku = K(1, :) * Mp;
+
+fh = figure;
+fh.WindowState = 'maximized';
+hold on;
 for k = 1:n+1 %%TODO - uzyskac y_akt i wygenerowac w kazdej iteracji wektor sterowan F1
     %%liczenie dla aktualnej chwili k parametrow obiektu
-    [t, V] = model_lin(tspan, y0, U, Fd, a1, a2, a3, b1, b2, Tp, Tsym); %%TODO - dodac dla aktualnej chwili k, a nie calej tspan
+%     [t, V] = model_lin(tspan, y0, U, Fd, a1, a2, a3, b1, b2, Tp, Tsym); %%TODO - dodac dla aktualnej chwili k, a nie calej tspan
+    if (k == 1)
+        V = [V1_0  V2_0];
+    else    
+        [t, V] = model_lin(tspan(1:k), y0, U(1:k, 1), Fd(1:k, 1), a1, a2, a3, b1, b2, Tp, tspan(k));
+    end
     V1_dmc(k, 1) = V(k, 1);
     V2_dmc(k, 1) = V(k, 2);
     h1_dmc(k, 1) = H1zlin(V1_dmc(k, 1),Ch1, V1_lin);
     h2_dmc(k, 1) = H2zlin(V2_dmc(k, 1), Ch2, V2_lin);
     F2_dmc(k, 1) = F2out(al1, h1_dmc(k, 1)); %%trzeba dodac funkcje linearyzacyjna F2out
     F3_dmc(k, 1) = F3out(al2, h2_dmc(k, 1));
-    
     y_akt = h2_dmc(k, 1);
+    if (k > 1)
+       stairs(t(1:k), h2_dmc(1:k)); 
+    end
     suma = 0;
     for i = 1: (D-1)
        suma = suma + ku(1, i) * deltaU_p(i, 1);
@@ -130,6 +141,7 @@ for k = 1:n+1 %%TODO - uzyskac y_akt i wygenerowac w kazdej iteracji wektor ster
     disp(k);
     disp(y_akt);
     disp(U(k, 1));
+    disp(delta_u_akt);
 end
 
 figure;
