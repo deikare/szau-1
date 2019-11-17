@@ -6,12 +6,15 @@ al2 = 16;
 
 F1in = 78;
 Fd0 = 15;
+% Fd0 = 0;
 h1_0 = 51.1775;
 % h1_0 = 0;
 h2_0 = 33.7852;
 % h2_0 = 0;
 V1_0 = V1(h1_0, C1); %warunki pocz¹tkowe objetosci
 V2_0 = V2(h2_0, C2); %warunki pocztkowe objetosci
+
+
 
 p = al1/nthroot(C1, 4); %jak uzaleznilem wszystkie wyp³ywy zamiast od h1, h2, to V1, V2, to tu licze wspolczynniki
 q = al2/nthroot(C2, 4); %jak cos nthroot(C2, 3) to pierwiastek 3iego stopnia z C2
@@ -20,7 +23,7 @@ Ch2 = 1 / sqrt(C2);
 
 Top = 90;
 % Top = 0;
-Tsym = 1500;
+Tsym = 3000;
 Tp = 5;
 
 V1ust = ((F1in+Fd0)/p)^4; %w stanie ustalonym
@@ -39,10 +42,15 @@ disp(['h2ust = ', num2str(h2ust)]);
 %pkty linearyzacji
 h1_lin = 35;
 h2_lin = 33.7852;
+
+
 % h2_lin = 32;
 
 V1_lin = V1(h1_lin, C1);
 V2_lin = V2(h2_lin, C2);
+
+V1_lin_0 = V1zlin(h1_0, C1, h1_lin);
+V2_lin_0 = V2zlin(h2_0, C2, h2_lin);
 
 %wspolczynniki do modelu liniowego
 a1 = -p * ((nthroot(V1_lin, 4)).^(-3)) / 4;
