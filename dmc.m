@@ -5,6 +5,7 @@ tspan = 0 : Tp : Tsym;
 % F1 = F1out(F1in, F1in+20, Top, n, Tp);
 F1 = F1out(F1in, F1in+1, Top, n, Tp);
 Fd = Fdout(Fd0, n);
+% y0 = [V1zlin(h1_lin, C1, h1_lin), V2_0];
 [t, V_lin] = model_lin(tspan, y0, F1, Fd, a1, a2, a3, b1, b2, Tp, Tsym);
 % figure;
 % stairs(t, V_lin(:, 1));
@@ -25,7 +26,7 @@ pause(0.01);
 % hold off;
 
 
-D = round(332/Tp);
+D = round(595/Tp);
 % D = round(410/Tp);
 % D = 5;
 % s = h2_lin_w(1:D);

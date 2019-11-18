@@ -110,7 +110,7 @@ for i = 1 : length_FdK_w + length_F1inK_w %+ length_tau_w + length_h1_0_w + leng
     fh = figure('Name', ['F1inK=', num2str(F1inK_akt), ', FdK=', num2str(FdK_akt), ', tau=', num2str(tau_akt), ', h1z=', num2str(h1_0_akt), ', h2z=', num2str(h2_0_akt)]); 
     fh.WindowState = 'maximized';
     hold on;
-    modelPlotter(V, V_lin, h1, h1_lin, h2, h2_lin, t, t_lin, F1, Fd, F2w, F3w, ['F1inK=', num2str(F1inK_akt), ', FdK=', num2str(FdK_akt)]);
+    modelPlotter(V, V_lin, h1, h1_lin, h2, h2_lin, t, t_lin, F1, Fd, F2w, F3w, ['F1inK=', num2str(F1inK_akt), ', FdK=', num2str(FdK_akt)], Tsym);
     hold off;
     
 end
@@ -159,10 +159,10 @@ j=1;
 for F1inK_akt = F1inK_w %zestawienie wynikow linearyzacji dla zmian skokow F1
     Fd = Fdout(Fd0, n); %przygotowanie wektorow probek zaklocen, F1 opoznione i V0
     F1 = F1out(F1in, F1inK_akt, Top, n, Tp);
-    V1ust_lin = (-F1inK_akt - Fd0 -b1) / a1;
-    V2ust_lin = (-a3 * V1ust_lin - b2) / a2; %%TODO - dodaæ start z punktu ustalonego 
-    y0 = [V1ust_lin, V2ust_lin];
-%     y0 = [V1(h1_0, C1), V2(h2_0, C2)];
+%     V1ust_lin = (-F1inK_akt - Fd0 -b1) / a1;
+%     V2ust_lin = (-a3 * V1ust_lin - b2) / a2; %%TODO - dodaæ start z punktu ustalonego 
+%     y0 = [V1ust_lin, V2ust_lin];
+    y0 = [V1(h1_0, C1), V2(h2_0, C2)];
     
     [t_lin, V_lin] = model_lin(tspan, y0, F1, Fd, a1, a2, a3, b1, b2, Tp, Tsym); %wyliczenie modelu zlinearyzowanego
 %     h1_lin = H1(V_lin(:, 1), Ch1);

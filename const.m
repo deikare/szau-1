@@ -40,7 +40,7 @@ disp(['h1ust = ', num2str(h1ust)]);
 disp(['h2ust = ', num2str(h2ust)]);
 
 %pkty linearyzacji
-h1_lin = 35;
+h1_lin = 51.1775;
 h2_lin = 33.7852;
 
 
