@@ -16,6 +16,8 @@ Fd = Fdout(Fd0, n);
 %h2_lin = (H2zlin(V_lin(:, 2), Ch2, V2_lin)  - h2_0) / 20 + h2_0;
 % h2_lin = (H2zlin(V_lin(:, 2), Ch2, V2_lin)  - h2_0) / 20;
 h2_lin = H2zlin(V_lin(:, 2), Ch2, V2_lin);
+stairs(t, h2_lin);
+pause(0.01);
 % figure;
 % % stairs(t, h1_lin);
 % % hold on;
@@ -24,6 +26,7 @@ h2_lin = H2zlin(V_lin(:, 2), Ch2, V2_lin);
 
 
 D = round(332/Tp);
+% D = round(410/Tp);
 % D = 5;
 % s = h2_lin_w(1:D);
 s = h2_lin(1:D);
@@ -32,7 +35,7 @@ N = D;
 fi = 1;
 lam = 0.05;
 % hzad = 50;
-yzad = 69;
+yzad = 40;
 yzad_pmax = yzad * 1.05; %%koordynaty do narysowania strefy +- 5% yzad
 yzad_pmin = yzad * 0.95;
 h = yzad * 0.1;  %wysokosc strefy
@@ -110,17 +113,16 @@ for k = 1:n+1 %%TODO - uzyskac y_akt i wygenerowac w kazdej iteracji wektor ster
 %     [t, V] = model_lin(tspan, y0, U, Fd, a1, a2, a3, b1, b2, Tp, Tsym); %%TODO - dodac dla aktualnej chwili k, a nie calej tspan
     if (k == 1)
 %         V = [V1_0  V2_0];
-        V = [V1_lin_0 V2_lin_0];
+        V = [V1_0 V2_0];
     else    
-        [t, V] = model_lin(tspan(1:k), y0, U(1:k, 1), Fd(1:k, 1), a1, a2, a3, b1, b2, Tp, tspan(k));
+        [t, V] = model(tspan(1:k), y0, U(1:k, 1), Fd(1:k, 1), p, q, Tp, tspan(k));
     end
-    V1_dmc(k, 1) = V(k, 1);
-    V2_dmc(k, 1) = V(k, 2);
-    h1_dmc(k, 1) = H1zlin(V1_dmc(k, 1),Ch1, V1_lin);
-    h2_dmc(k, 1) = H2zlin(V2_dmc(k, 1), Ch2, V2_lin);
-    F2_dmc(k, 1) = F2out(al1, h1_dmc(k, 1)); %%trzeba dodac funkcje linearyzacyjna F2out
-    F3_dmc(k, 1) = F3out(al2, h2_dmc(k, 1));
-%     y_akt = V2_dmc(k, 1);
+%     V1_dmc(k, 1) = V(k, 1);
+%     V2_dmc(k, 1) = V(k, 2);
+    h1_dmc(k, 1) = H1(V(k, 1), Ch1);
+    h2_dmc(k, 1) = H2(V(k, 2), Ch2);
+%     F2_dmc(k, 1) = F2out(al1, h1_dmc(k, 1));
+%     F3_dmc(k, 1) = F3out(al2, h2_dmc(k, 1));
     y_akt = h2_dmc(k, 1);
     suma = 0;
     for i = 1: (D-1)
@@ -128,11 +130,11 @@ for k = 1:n+1 %%TODO - uzyskac y_akt i wygenerowac w kazdej iteracji wektor ster
     end
     delta_u = ke * (Yzad(k) - y_akt) + suma; %wartosc wyliczona, ale potrzebujaca przesuniecia w czasie o shift probek
     
-    if (delta_u < -deltaUmax) %%ograniczenie na zmiane sygnalu sterujacego
-        delta_u = -deltaUmax;
-    elseif (delta_u > deltaUmax)
-        delta_u = deltaUmax;
-    end
+%     if (delta_u < -deltaUmax) %%ograniczenie na zmiane sygnalu sterujacego
+%         delta_u = -deltaUmax;
+%     elseif (delta_u > deltaUmax)
+%         delta_u = deltaUmax;
+%     end
     
     
     if (k + shift < n + 1)
@@ -150,24 +152,91 @@ for k = 1:n+1 %%TODO - uzyskac y_akt i wygenerowac w kazdej iteracji wektor ster
         upop = U(k-1,1); %wartosc sterowania w chwili poprzedniej
     end
     
-    if (delta_u_akt + upop < umin) %rzutowanie ograniczen na wartosc sterowania
+%     if (delta_u_akt + upop < umin) %rzutowanie ograniczen na wartosc sterowania
+%         delta_u_akt = umin - upop;
+%     elseif (delta_u_akt + upop > umax)
+%         delta_u_akt = umax - upop;
+%     end
+
+    if (delta_u_akt + upop < umin)
         delta_u_akt = umin - upop;
-    elseif (delta_u_akt + upop > umax)
-        delta_u_akt = umax - upop;
     end
     
     U(k,1) = upop + delta_u_akt; %wartosc sterowania w chwili aktualnej - jednoczesnie jest to F1 - juz przesuniete w czasie
     deltaU_p = circshift(deltaU_p, 1); %cofam o jedna chwile wartosc poprzednich sterowan, a na pierwsza wspolrzedna ...
     deltaU_p(1,1) = delta_u_akt;       %... wstawiam aktualny wzrost sterowania
     
-    if (k > 1)
-       figure(fh1);
+%     if (k > 1)
+%        figure(fh1);
+%        nexttile(1);
+%        rectangle('Position', [0 yzad_pmin Tsym h], 'FaceColor', '#F5F0D7', 'EdgeColor', '#EDB120', 'LineStyle', '--');
+%        hold on;
+%        stairs(t(1:k), h1_dmc(1:k), 'Color', '#0072BD');
+%        
+%        stairs(t(1:k), h2_dmc(1:k), 'Color', '#D95319');
+%        
+%        plot(tspan, Yzad, '--', 'Color', '#EDB120');
+% %        plot(tspan, Yzad_pmax, '
+%        axis([0 Tsym 0 inf]);
+%        title('h');
+%        legend({'h1', 'h2'}, 'Location' , 'southeast');
+%        hold off;
+%        
+%        nexttile(2);
+%        stairs(t(1:k), V1_dmc(1:k));
+%        hold on;
+%        stairs(t(1:k), V2_dmc(1:k));
+%        axis([0 Tsym 0 inf]);
+% %        plot(tspan, Yzad, '--');
+%        title('V');
+%        legend({'V1', 'V2'}, 'Location' , 'southeast');
+%        hold off;
+       
+%        figure(fh2);
+%        nexttile(1);
+%        stairs(t(1:k), U(1:k));
+%        hold on;
+%        stairs(t(1:k), Fd(1:k));
+%        axis([0 Tsym umin umax+10]);
+%        title('doplywy');
+%        legend({'F1(U)', 'Fd'}, 'Location' , 'southeast');
+%        hold off;
+%        
+%        nexttile(2);
+%        stairs(t(1:k), F2_dmc(1:k));
+%        hold on;
+%        stairs(t(1:k), F3_dmc(1:k));
+%        axis([0 Tsym 0 inf]);
+%        title('odplywy');
+%        legend({'F2', 'F3'}, 'Location' , 'southeast');
+%        hold off;
+%        
+%        pause(0.001);
+%     end
+    disp(k);
+    disp(y_akt);
+%     disp(U(k, 1));
+    disp(delta_u_akt);
+end
+hold off;
+
+V1_dmc = V1(h1_dmc, C1);
+V2_dmc = V2(h2_dmc, C2);
+
+F2_dmc = F2out(al1, h1_dmc);
+F3_dmc = F3out(al2, h2_dmc);
+
+fh = figure;
+hold on;
+fh.WindowState = 'maximized';
+tiledlayout(2, 1);
+figure(fh);
        nexttile(1);
        rectangle('Position', [0 yzad_pmin Tsym h], 'FaceColor', '#F5F0D7', 'EdgeColor', '#EDB120', 'LineStyle', '--');
        hold on;
-       stairs(t(1:k), h1_dmc(1:k), 'Color', '#0072BD');
+       stairs(tspan, h1_dmc, 'Color', '#0072BD');
        
-       stairs(t(1:k), h2_dmc(1:k), 'Color', '#D95319');
+       stairs(tspan, h2_dmc, 'Color', '#D95319');
        
        plot(tspan, Yzad, '--', 'Color', '#EDB120');
 %        plot(tspan, Yzad_pmax, '
@@ -177,42 +246,41 @@ for k = 1:n+1 %%TODO - uzyskac y_akt i wygenerowac w kazdej iteracji wektor ster
        hold off;
        
        nexttile(2);
-       stairs(t(1:k), V1_dmc(1:k));
+       stairs(tspan, V1_dmc);
        hold on;
-       stairs(t(1:k), V2_dmc(1:k));
+       stairs(tspan, V2_dmc);
        axis([0 Tsym 0 inf]);
 %        plot(tspan, Yzad, '--');
        title('V');
        legend({'V1', 'V2'}, 'Location' , 'southeast');
        hold off;
-       
-       figure(fh2);
-       nexttile(1);
-       stairs(t(1:k), U(1:k));
+hold off;
+
+fh = figure;
+hold on;
+fh.WindowState = 'maximized';
+tiledlayout(2, 1);
+
+nexttile(1);
+stairs(tspan, U);
        hold on;
-       stairs(t(1:k), Fd(1:k));
-       axis([0 Tsym umin umax+10]);
+       stairs(tspan, Fd);
+       axis([0 Tsym umin inf]);
        title('doplywy');
        legend({'F1(U)', 'Fd'}, 'Location' , 'southeast');
        hold off;
        
-       nexttile(2);
-       stairs(t(1:k), F2_dmc(1:k));
+
+nexttile(2);
+       stairs(tspan, F2_dmc);
        hold on;
-       stairs(t(1:k), F3_dmc(1:k));
+       stairs(tspan, F3_dmc);
        axis([0 Tsym 0 inf]);
        title('odplywy');
        legend({'F2', 'F3'}, 'Location' , 'southeast');
        hold off;
-       
-       pause(0.001);
-    end
-%     disp(k);
-%     disp(y_akt);
-%     disp(U(k, 1));
-%     disp(delta_u_akt);
-end
 hold off;
+
 % fh = figure;
 % hold on;
 % tiledlayout(2, 1);

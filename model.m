@@ -2,7 +2,7 @@ function [t, y] = model(tspan, y0, F1, Fd, p, q, Tp, Tsym)
 %funkcja liczaca model
 %     disp(p);
 %     disp(q);
-    [t, y] = ode45(@dstate, tspan, y0, odeset('RelTol',1e-8,'AbsTol',1e-9));
+    [t, y] = ode45(@dstate, tspan, y0, odeset('RelTol',1e-6,'AbsTol',1e-6));
     
     function dydt = dstate(t, y)
         dydt = zeros(2,1);
