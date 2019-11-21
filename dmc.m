@@ -17,8 +17,8 @@ Fd = Fdout(Fd0, n);
 %h2_lin = (H2zlin(V_lin(:, 2), Ch2, V2_lin)  - h2_0) / 20 + h2_0;
 % h2_lin = (H2zlin(V_lin(:, 2), Ch2, V2_lin)  - h2_0) / 20;
 h2_lin = H2zlin(V_lin(:, 2), Ch2, V2_lin);
-stairs(t, h2_lin);
-pause(0.01);
+% stairs(t, h2_lin);
+% pause(0.01);
 % figure;
 % % stairs(t, h1_lin);
 % % hold on;
@@ -36,7 +36,7 @@ N = D;
 fi = 1;
 lam = 0.05;
 % hzad = 50;
-yzad = 40;
+yzad = 80;
 yzad_pmax = yzad * 1.05; %%koordynaty do narysowania strefy +- 5% yzad
 yzad_pmin = yzad * 0.95;
 h = yzad * 0.1;  %wysokosc strefy
@@ -113,11 +113,11 @@ for k = 1:n+1 %%TODO - uzyskac y_akt i wygenerowac w kazdej iteracji wektor ster
     %%liczenie dla aktualnej chwili k parametrow obiektu
 %     [t, V] = model_lin(tspan, y0, U, Fd, a1, a2, a3, b1, b2, Tp, Tsym); %%TODO - dodac dla aktualnej chwili k, a nie calej tspan
     if (k == 1)
-%         V = [V1_0  V2_0];
         V = [V1_0 V2_0];
     else    
         [t, V] = model(tspan(1:k), y0, U(1:k, 1), Fd(1:k, 1), p, q, Tp, tspan(k));
     end
+%     [t, V] = model(tspan, y0, U, Fd, p, q, Tp, Tsym);
 %     V1_dmc(k, 1) = V(k, 1);
 %     V2_dmc(k, 1) = V(k, 2);
     h1_dmc(k, 1) = H1(V(k, 1), Ch1);
