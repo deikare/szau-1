@@ -6,28 +6,29 @@ function wektorPrzyn = funprzyn(u, n, umin, umax, dU)
     u_length = length(u);
     wektorPrzyn = zeros(u_length, n);
     bounds = (umax - umin) / n; %%obliczanie zakresów przesuwania do kolejnego zbioru rozmytego
-    a = umin - dU; %%produkujemy trapezy
-    b = umin;
+    a = - dU; %%produkujemy trapezy
+    b = 0;
     c = umin + bounds;
     d = c + dU;
     for j = 1 : n
        for i = 1: u_length
           wektorPrzyn(i, j) = trapez(u(i), a, b, c, d); 
        end
-       if j == 1
-           a = a + bounds + dU;
-           b = b + bounds + dU;
-       else
-           a = a + bounds;
-           b = b + bounds;
-       end
-       if j == n-1 %%aby dla du¿ych sterowan zawsze bylo 1 na wyjsciu
+       if j == n-1 %%aby dla du¿ych sterowan zawsze bylo 1 na wyjsciu ostatniego zbioru
            c = 55000;
            d = 55000;
        else
            c = c + bounds;
            d = d + bounds;
        end
+       if j == 1
+           b = d - bounds;
+           a = b - dU;
+       else
+           a = a + bounds;
+           b = b + bounds;
+       end
+       
     end
 end
 

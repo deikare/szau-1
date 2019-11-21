@@ -20,6 +20,8 @@ for n = N
     wektorPrzyn = funprzyn(U, n, umin, umax, 10);
     for i = 1: n
         plot(U, wektorPrzyn(:, i));
+        xlabel('u');
+        ylabel('\mu');
     end
     
     hold off;
