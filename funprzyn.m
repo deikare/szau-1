@@ -1,13 +1,12 @@
 function wektorPrzyn = funprzyn(u, n, umin, umax, dU)
 %funkcja dostaje sterowanie i uogólnion¹ iloœæ zbiorów rozmytych i oblicza
-%wartosci funkcji przynaleznosci
+%wartosci funkcji przynaleznosci do poszczególnych zbiorow
 %umin - minimalne sterowanie, umax - maksymalne, dU - skoki trapezow
-%UNTITLED3 Summary of this function goes here
-%   Detailed explanation goes here
+
     u_length = length(u);
     wektorPrzyn = zeros(u_length, n);
-    bounds = (umax - umin) / n; %%obliczanie zakresów "1" na wyjœciu
-    a = umin - dU;
+    bounds = (umax - umin) / n; %%obliczanie zakresów przesuwania do kolejnego zbioru rozmytego
+    a = umin - dU; %%produkujemy trapezy
     b = umin;
     c = umin + bounds;
     d = c + dU;
@@ -22,7 +21,7 @@ function wektorPrzyn = funprzyn(u, n, umin, umax, dU)
            a = a + bounds;
            b = b + bounds;
        end
-       if j == n-1
+       if j == n-1 %%aby dla du¿ych sterowan zawsze bylo 1 na wyjsciu
            c = 55000;
            d = 55000;
        else

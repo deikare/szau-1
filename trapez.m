@@ -1,4 +1,4 @@
-function y = trapez(u, a, b, c, d)
+function y = trapez(u, a, b, c, d) %%typowy trapez
     if u < a
         y = 0;
     elseif u >= a && u < b
