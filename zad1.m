@@ -2,7 +2,7 @@ const;
 tspan = 0:Tp:Tsym;
 
 FdK_w = [Fd0-20 Fd0-10 Fd0 Fd0+10 Fd0+20]; %wektory kolejnych skokow -odpowiednio do testu odpowiedzi na skok Fd oraz F1in
-F1inK_w = [F1in-20 F1in-10 F1in F1in+10 F1in+20];
+F1inK_w = [F1in-50 F1in-40 F1in-30 F1in-20 F1in-10 F1in F1in+10 F1in+20 F1in+30 F1in+40];
 % F1inK_w = 76;   %tu w pelni przygotowane wektory do testow takze po opoznieniu i wysokosci poczatkowej                          
 % tau_w = 0.5 * Top: 0.25*Top : 1.5*Top; 
 % h1_0_w = 0 : 0.35 * h1_0 : 1.5 * h1_0;

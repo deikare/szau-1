@@ -17,8 +17,8 @@ Fd = Fdout(Fd0, n);
 %h2_lin = (H2zlin(V_lin(:, 2), Ch2, V2_lin)  - h2_0) / 20 + h2_0;
 % h2_lin = (H2zlin(V_lin(:, 2), Ch2, V2_lin)  - h2_0) / 20;
 h2_lin = H2zlin(V_lin(:, 2), Ch2, V2_lin);
-% stairs(t, h2_lin);
-% pause(0.01);
+stairs(t, h2_lin);
+pause(0.01);
 % figure;
 % % stairs(t, h1_lin);
 % % hold on;
@@ -26,7 +26,8 @@ h2_lin = H2zlin(V_lin(:, 2), Ch2, V2_lin);
 % hold off;
 
 
-D = round(595/Tp);
+% D = round(595/Tp);
+D = getD(h2_lin, 0.0001);
 % D = round(410/Tp);
 % D = 5;
 % s = h2_lin_w(1:D);
@@ -36,7 +37,7 @@ N = D;
 fi = 1;
 lam = 0.05;
 % hzad = 50;
-yzad = 80;
+yzad = 50;
 yzad_pmax = yzad * 1.05; %%koordynaty do narysowania strefy +- 5% yzad
 yzad_pmin = yzad * 0.95;
 h = yzad * 0.1;  %wysokosc strefy

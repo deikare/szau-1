@@ -1,10 +1,10 @@
 clear;
 umin = 0;
-umax = 150;
+umax = 90;
 dU = 0.5;
 
 
-U = umin: dU: 180;
+U = umin: dU: 100;
 N = [3 4 5];
 
 fh = figure;
@@ -20,7 +20,7 @@ for n = N
     wektorPrzyn = funprzyn(U, n, umin, umax, 10);
     for i = 1: n
         plot(U, wektorPrzyn(:, i));
-        xlabel('u');
+        xlabel('y');
         ylabel('\mu');
     end
     
