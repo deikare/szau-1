@@ -17,8 +17,8 @@ Fd = Fdout(Fd0, n);
 %h2_lin = (H2zlin(V_lin(:, 2), Ch2, V2_lin)  - h2_0) / 20 + h2_0;
 % h2_lin = (H2zlin(V_lin(:, 2), Ch2, V2_lin)  - h2_0) / 20;
 h2_lin = H2zlin(V_lin(:, 2), Ch2, V2_lin);
-stairs(t, h2_lin);
-pause(0.01);
+% stairs(t, h2_lin);
+% pause(0.01);
 % figure;
 % % stairs(t, h1_lin);
 % % hold on;
@@ -37,7 +37,7 @@ N = D;
 fi = 1;
 lam = 0.05;
 % hzad = 50;
-yzad = 50;
+yzad = 20;
 yzad_pmax = yzad * 1.05; %%koordynaty do narysowania strefy +- 5% yzad
 yzad_pmin = yzad * 0.95;
 h = yzad * 0.1;  %wysokosc strefy
@@ -111,20 +111,13 @@ tiledlayout(2, 1);
 utile = nexttile;
 F2F3tile = nexttile;
 for k = 1:n+1 %%TODO - uzyskac y_akt i wygenerowac w kazdej iteracji wektor sterowan F1
-    %%liczenie dla aktualnej chwili k parametrow obiektu
-%     [t, V] = model_lin(tspan, y0, U, Fd, a1, a2, a3, b1, b2, Tp, Tsym); %%TODO - dodac dla aktualnej chwili k, a nie calej tspan
     if (k == 1)
         V = [V1_0 V2_0];
     else    
         [t, V] = model(tspan(1:k), y0, U(1:k, 1), Fd(1:k, 1), p, q, Tp, tspan(k));
     end
-%     [t, V] = model(tspan, y0, U, Fd, p, q, Tp, Tsym);
-%     V1_dmc(k, 1) = V(k, 1);
-%     V2_dmc(k, 1) = V(k, 2);
     h1_dmc(k, 1) = H1(V(k, 1), Ch1);
     h2_dmc(k, 1) = H2(V(k, 2), Ch2);
-%     F2_dmc(k, 1) = F2out(al1, h1_dmc(k, 1));
-%     F3_dmc(k, 1) = F3out(al2, h2_dmc(k, 1));
     y_akt = h2_dmc(k, 1);
     suma = 0;
     for i = 1: (D-1)
@@ -141,10 +134,6 @@ for k = 1:n+1 %%TODO - uzyskac y_akt i wygenerowac w kazdej iteracji wektor ster
     
     if (k + shift < n + 1)
         deltaU_op(k + shift, 1) = delta_u;
-        %%bez sensu
-%     else %jezeli wychodzimy z opoznieniem poza zakres, to zmodyfikuj
-%     ostatni
-%         deltaU_op(n + 1, 1) = delta_u;
     end
     
     delta_u_akt = deltaU_op(k, 1); %%aktualna wartosc sterowania, ustawiona <shift> chwil wczesniej
@@ -167,57 +156,9 @@ for k = 1:n+1 %%TODO - uzyskac y_akt i wygenerowac w kazdej iteracji wektor ster
     U(k,1) = upop + delta_u_akt; %wartosc sterowania w chwili aktualnej - jednoczesnie jest to F1 - juz przesuniete w czasie
     deltaU_p = circshift(deltaU_p, 1); %cofam o jedna chwile wartosc poprzednich sterowan, a na pierwsza wspolrzedna ...
     deltaU_p(1,1) = delta_u_akt;       %... wstawiam aktualny wzrost sterowania
-    
-%     if (k > 1)
-%        figure(fh1);
-%        nexttile(1);
-%        rectangle('Position', [0 yzad_pmin Tsym h], 'FaceColor', '#F5F0D7', 'EdgeColor', '#EDB120', 'LineStyle', '--');
-%        hold on;
-%        stairs(t(1:k), h1_dmc(1:k), 'Color', '#0072BD');
-%        
-%        stairs(t(1:k), h2_dmc(1:k), 'Color', '#D95319');
-%        
-%        plot(tspan, Yzad, '--', 'Color', '#EDB120');
-% %        plot(tspan, Yzad_pmax, '
-%        axis([0 Tsym 0 inf]);
-%        title('h');
-%        legend({'h1', 'h2'}, 'Location' , 'southeast');
-%        hold off;
-%        
-%        nexttile(2);
-%        stairs(t(1:k), V1_dmc(1:k));
-%        hold on;
-%        stairs(t(1:k), V2_dmc(1:k));
-%        axis([0 Tsym 0 inf]);
-% %        plot(tspan, Yzad, '--');
-%        title('V');
-%        legend({'V1', 'V2'}, 'Location' , 'southeast');
-%        hold off;
-       
-%        figure(fh2);
-%        nexttile(1);
-%        stairs(t(1:k), U(1:k));
-%        hold on;
-%        stairs(t(1:k), Fd(1:k));
-%        axis([0 Tsym umin umax+10]);
-%        title('doplywy');
-%        legend({'F1(U)', 'Fd'}, 'Location' , 'southeast');
-%        hold off;
-%        
-%        nexttile(2);
-%        stairs(t(1:k), F2_dmc(1:k));
-%        hold on;
-%        stairs(t(1:k), F3_dmc(1:k));
-%        axis([0 Tsym 0 inf]);
-%        title('odplywy');
-%        legend({'F2', 'F3'}, 'Location' , 'southeast');
-%        hold off;
-%        
-%        pause(0.001);
-%     end
+
     disp(k);
     disp(y_akt);
-%     disp(U(k, 1));
     disp(delta_u_akt);
 end
 hold off;
