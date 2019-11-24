@@ -37,7 +37,7 @@ N = D;
 fi = 1;
 lam = 0.05;
 % hzad = 50;
-yzad = 20;
+yzad = 50;
 yzad_pmax = yzad * 1.05; %%koordynaty do narysowania strefy +- 5% yzad
 yzad_pmin = yzad * 0.95;
 h = yzad * 0.1;  %wysokosc strefy
@@ -123,7 +123,7 @@ for k = 1:n+1 %%TODO - uzyskac y_akt i wygenerowac w kazdej iteracji wektor ster
     for i = 1: (D-1)
        suma = suma + ku(1, i) * deltaU_p(i, 1);
     end
-    delta_u = ke * (Yzad(k) - y_akt) + suma; %wartosc wyliczona, ale potrzebujaca przesuniecia w czasie o shift probek
+    delta_u = ke * (Yzad(k) - y_akt) - suma; %wartosc wyliczona, ale potrzebujaca przesuniecia w czasie o shift probek
     
 %     if (delta_u < -deltaUmax) %%ograniczenie na zmiane sygnalu sterujacego
 %         delta_u = -deltaUmax;

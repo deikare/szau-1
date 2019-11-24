@@ -23,7 +23,7 @@ Ch2 = 1 / sqrt(C2);
 
 Top = 90;
 % Top = 0;
-Tsym = 3000;
+Tsym = 1000;
 Tp = 5;
 
 V1ust = ((F1in+Fd0)/p)^4; %w stanie ustalonym
