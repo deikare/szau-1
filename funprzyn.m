@@ -11,7 +11,7 @@ function mi = funprzyn(X,l,xmin, xmax, dX, n)
     granice = zbioryrozmyte(xmin, xmax, l, dX);
     mi = zeros(1, Xlength);
     %%znalezlismy zbior
-    if n == l %%aby dla du¿ych sterowan zawsze bylo 1 na wyjsciu ostatniego zbioru
+    if n == l %%aby dla du¿ych h2 zawsze bylo 1 na wyjsciu ostatniego zbioru
         c = 55000;
         d = 55000;
     else
@@ -21,7 +21,7 @@ function mi = funprzyn(X,l,xmin, xmax, dX, n)
                 
     if n == 1
         b = granice(n,1);
-        a = b - dX;
+        a = b - 999999;
     else
         a = granice(n,1);
         b = a + dX;

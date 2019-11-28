@@ -19,9 +19,9 @@ ymin = 0;
 ymax = 70;
 % zbocze = 20;
 % zbocze = 11;
-zbocze = 5;
-L = [2 3 4 5];
-% L = 5;
+zbocze = 14;
+% L = [2 3 4 5]
+L = 5;
 % l = 5; %%liczba modeli
 % graniczne = zbioryrozmyte(ymin, ymax, l, zbocze); %%krance przedzialow zmiennych rozmytych
 
@@ -30,8 +30,8 @@ L = [2 3 4 5];
 
 % h2lin_w = [17 31.5 47.5 70 67]; %%SUPER DOBRE MODELOWANIE <3 
 % h2lin_w = [10 30 50 70 90];
-% h2lin_w = [10 16 35 40 63];
-% V2lin_w = V2(h2lin_w, C2);
+h2lin_w = [10 16 35 40 63];
+V2lin_w = V2(h2lin_w, C2);
 
 % h2lin_w = getH2linW(ymin, ymax, zbocze, L);
 % V2lin_w = V2(h2lin_w, C2);
@@ -61,8 +61,8 @@ L = [2 3 4 5];
 for l = L
     graniczne = zbioryrozmyte(ymin, ymax, l, zbocze); %%krance przedzialow zmiennych rozmytych
 %     graniczne = [-8 10; 8 20; 15 30; 25 40; 35 85];
-    h2lin_w = getH2linW(ymin, ymax, zbocze, l);
-    V2lin_w = V2(h2lin_w, C2);
+%         h2lin_w = getH2linW(ymin, ymax, zbocze, l);
+%         V2lin_w = V2(h2lin_w, C2);
     a2_w = -q * ((nthroot(V2lin_w, 4)).^(-3)) / 4;  %%potrzebne, poniewa¿ przy zmianie punktu linearyzacji zmieniaja sie takze wspolczynniki a2, b2...
     b2_w = -b1 - 3 * q * (nthroot(V2lin_w, 4)) / 4; %%...gdyz skaczemy miedzy punktami linearyzacji dla roznych modeli lokalnych
 
