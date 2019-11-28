@@ -10,6 +10,7 @@ tspan = 0:Tp:Tsym;
 ymin = 0;
 ymax = 80;
 zbocze = 15;
+% L = [2 3 4 5]
 L = 5;
 % l = 5; %%liczba modeli
 % graniczne = zbioryrozmyte(ymin, ymax, l, zbocze); %%krance przedzialow zmiennych rozmytych
