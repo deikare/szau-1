@@ -14,7 +14,10 @@ h2_0 = 33.7852;
 V1_0 = V1(h1_0, C1); %warunki pocz¹tkowe objetosci
 V2_0 = V2(h2_0, C2); %warunki pocztkowe objetosci
 
-
+tol = 0.0001;
+yzad = 40;
+lam = 0.05;
+fi = 1;
 
 p = al1/nthroot(C1, 4); %jak uzaleznilem wszystkie wyp³ywy zamiast od h1, h2, to V1, V2, to tu licze wspolczynniki
 q = al2/nthroot(C2, 4); %jak cos nthroot(C2, 3) to pierwiastek 3iego stopnia z C2
@@ -23,7 +26,7 @@ Ch2 = 1 / sqrt(C2);
 
 Top = 90;
 % Top = 0;
-Tsym = 1000;
+Tsym = 3000;
 Tp = 5;
 
 V1ust = ((F1in+Fd0)/p)^4; %w stanie ustalonym
