@@ -59,7 +59,7 @@ for j = 1 : Nu
 end
 
 for j = 1 : Nu
-    M(k:N, j) = sz(1 : N - k + 1);
+    Mz(k:N, j) = sz(1 : N - k + 1);
     k = k+1;
 end
 

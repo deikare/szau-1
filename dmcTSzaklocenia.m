@@ -27,11 +27,21 @@ for i = 1: L
 end
 
 D = max(D_w);
+
+F1 = F1out(F1in, F1in, Top, n, Tp);
+Fd = Fdout(Fd0+1, n);
+[t, V_lin] = model_lin(tspan, y0, F1, Fd, a1, a2, a3, b1, b2, Tp, Tsym);
+h2_lin_z = H2zlin(V_lin(:, 2), Ch2, V2_lin);
+Dz = getD(h2_lin_z, tol);
+
+D = max(D, Dz);
+
 Nu = 10;
 N = D;
 
 
 skoki_dmc = odp_skokowe(1:D, 1:L); %%skoki dla wszystkich modeli lokalnych
+sz = h2_lin(1:D);
 
 yzad_pmax = yzad * 1.05; %%koordynaty do narysowania strefy +- 5% yzad
 yzad_pmin = yzad * 0.95;
@@ -87,12 +97,29 @@ end
 
 pause(0.01);
 
+Mz = zeros(N, Nu);
+for j = 1 : Nu
+    Mz(k:N, j) = sz(1 : N - k + 1);
+    k = k+1;
+end
 
+Mpz = zeros(N, D-1);
+sz_zas = zeros(N+D-1, 1); %rozszerzony wektor sz o dodatkowe probki rowne wzmocnieniu, aby dalo sie dostac postac Mp
+sz_zas(1:D, 1) = sz(:, 1);
+sz_zas(D+1:N+D-1, 1) = sz(D, 1);
+for j = 1 : D-1
+   k = j+1; %indeks pierwszego odjecia
+   for i = 1 : N
+      Mpz(i, j) = sz_zas(k) - sz_zas(j); %
+      k = k+1;
+   end
+end
 
 
 deltaU_op = zeros(n + 1, 1); %%%bufor na opoznione sygnaly deltaU z dmc
 
 deltaU_p = zeros(D - 1, 1);
+deltaZ_p = zeros(D - 1, 1);
 U = zeros(n+1, 1); %wektor sterowan == F1
 
 shift = round(Top / Tp); %o ile probek przesuniety ma byc sygnal sterujacy
@@ -115,6 +142,8 @@ h2pop = h2_0;
 graniczne = zbioryrozmyte(ymin, ymax, L, zbocze); %%krance przedzialow zmiennych rozmytych
 deltaU_TS = zeros(L, 1);
 sila_odpalenia_w_akt = zeros(1, L);
+Fd = Fdout(Fd0, n);
+Fdpop = 0;
 for k = 1:n+1 %%TODO - uzyskac y_akt i wygenerowac w kazdej iteracji wektor sterowan F1
     if (k == 1)
         V = [V1_0 V2_0];
@@ -143,6 +172,13 @@ for k = 1:n+1 %%TODO - uzyskac y_akt i wygenerowac w kazdej iteracji wektor ster
         delta_u = delta_u + deltaU_TS(modnum, 1) * sila_odpalenia_w_akt(1, modnum);
     end
     delta_u = delta_u / sum(sila_odpalenia_w_akt);
+    
+    sumaz = 0;
+    for i = 1: (D-1)
+       sumaz = sumaz + kuz(1, i) * deltaZ_p(i, 1);
+    end
+    
+    delta_u = delta_u - sumaz;
 %     if (delta_u < -deltaUmax) %%ograniczenie na zmiane sygnalu sterujacego
 %         delta_u = -deltaUmax;
 %     elseif (delta_u > deltaUmax)
@@ -174,6 +210,10 @@ for k = 1:n+1 %%TODO - uzyskac y_akt i wygenerowac w kazdej iteracji wektor ster
     U(k,1) = upop + delta_u_akt; %wartosc sterowania w chwili aktualnej - jednoczesnie jest to F1 - juz przesuniete w czasie
     deltaU_p = circshift(deltaU_p, 1); %cofam o jedna chwile wartosc poprzednich sterowan, a na pierwsza wspolrzedna ...
     deltaU_p(1,1) = delta_u_akt;       %... wstawiam aktualny wzrost sterowania
+    
+    deltaZ_p = circshift(deltaZ_p, 1);
+    deltaZ_p(1,1) = Fd(k) - Fdpop;
+    Fdpop = Fd(k);
 
     disp(k);
     disp(y_akt);
